@@ -38,7 +38,7 @@ await connection.OpenAsync();
 
 if (connection == null)
 {
-    await Task.Delay(180000);
+    await Task.Delay(30000);
 
     connection = new SqlConnection
     {
@@ -48,7 +48,7 @@ if (connection == null)
     await connection.OpenAsync();
 }
 
-await Task.Delay(180000);
+await Task.Delay(30000);
 
 builder.Services.AddDbContext<SprintDbContext>(options => options.UseSqlServer(connection,
     options => options.EnableRetryOnFailure()));
