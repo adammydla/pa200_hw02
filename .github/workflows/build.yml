@@ -18,13 +18,13 @@ jobs:
           dotnet-version: '6.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore Sprint/Sprint.sln
 
       - name: Build app
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build Sprint/Sprint.sln --configuration Release --no-restore
 
       - name: Publish app
-        run: dotnet publish --configuration Release --output ./publish
+        run: dotnet publish Sprint/Sprint.sln --configuration Release --output ./publish
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

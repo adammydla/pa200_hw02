@@ -23,4 +23,4 @@ jobs:
 
 environment:
   name: production
-  url: https://yourapp.azurewebsites.net
+  url: https://pa200-hw02-app.azurewebsites.net/
