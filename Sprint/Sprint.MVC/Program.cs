@@ -1,11 +1,8 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Azure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using NuGet.Common;
 using Sprint.BL.Configs;
 using Sprint.BL.Dto.Role;
 using Sprint.BL.Dto.User;
@@ -38,6 +35,20 @@ var connection = new SqlConnection
     AccessToken = token.Token
 };
 await connection.OpenAsync();
+
+if (connection == null)
+{
+    await Task.Delay(30000);
+
+    connection = new SqlConnection
+    {
+        ConnectionString = connectionString,
+        AccessToken = token.Token
+    };
+    await connection.OpenAsync();
+}
+
+await Task.Delay(30000);
 
 builder.Services.AddDbContext<SprintDbContext>(options => options.UseSqlServer(connection,
     options => options.EnableRetryOnFailure()));
