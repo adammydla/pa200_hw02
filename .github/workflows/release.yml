@@ -1,0 +1,26 @@
+name: Release to Azure Web App
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: aspnet-app
+          path: ./publish
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: PA200-HW02-APP
+          publish-profile: ${{ secrets.AZURE_DEPLOY_SETTING }}
+          package: ./publish
+
+environment:
+  name: production
+  url: https://yourapp.azurewebsites.net
