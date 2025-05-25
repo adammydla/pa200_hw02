@@ -20,7 +20,3 @@ jobs:
           app-name: PA200-HW02-APP
           publish-profile: ${{ secrets.AZURE_DEPLOY_SETTING }}
           package: ./publish
-
-environment:
-  name: production
-  url: https://pa200-hw02-app.azurewebsites.net/
