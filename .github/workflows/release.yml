@@ -1,12 +1,17 @@
 name: Release to Azure Web App
 
 on:
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Build ASP.NET App"]
+    types:
+      - completed
 
 jobs:
   deploy:
     runs-on: windows-latest
 
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v4
