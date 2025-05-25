@@ -1,0 +1,80 @@
+@startuml SprintERD
+
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+
+entity User  {
+  + id (PK)
+  --
+  FirstName
+  LastName
+  DateOfBirth
+  Email
+  PasswordHash
+  PhotoPath
+  IsTrainer (Bool)
+}
+
+entity Trainer  {
+  + id (PK)
+  --
+  HourlyRate
+  Description
+  UserId (FK)
+}
+
+entity TrainerPhoto {
+  + id (PK)
+  --
+  Path
+  TrainerId (FK)
+  Hide (Bool)
+}
+
+entity TrainerReview {
+  + id (PK)
+  --
+  Rating
+  Text
+  Hide (Bool)
+}
+
+entity Court {
+  + id (PK)
+  --
+  HourlyRate
+  CourtNumber
+}
+
+entity CourtReservation {
+  + id (PK)
+  --
+  CourtId (FK)
+  UserId (FK)
+  Created
+  From
+  To
+  IsDeleted (Bool)
+}
+
+entity TrainerReservation {
+  + id (PK)
+  --
+  CourtReservationId (FK)
+  TrainerId (FK)
+  TrainerReviewId (FK)
+  IsDeleted (Bool)
+}
+
+User ||--o{ CourtReservation
+CourtReservation ||--o| TrainerReservation
+Trainer ||--o{ TrainerReservation
+Trainer ||--o{ TrainerPhoto
+Court ||--o{ CourtReservation
+TrainerReservation ||--o| TrainerReview
+
+@enduml
