@@ -1,0 +1,44 @@
+﻿@using Sprint.Common.Enums
+@model Sprint.MVC.Models.User.UserInfoViewModel
+
+<h4>User informations</h4>
+<table class="table table-striped">
+    <tbody>
+    <tr>
+        <td>Name</td>
+        <td>@Model.User.FirstName @Model.User.LastName</td>
+    </tr>
+    
+    <tr>
+        <td>Email</td>
+        <td>@Model.User.Email</td>
+    </tr>
+    
+    <tr>
+        <td>Age</td>
+        <td>@Model.User.Age</td>
+    </tr>
+    
+    @if (Model.User.PhotoPath is not null)
+    {
+        <tr>
+            <td>Photo</td>
+            <td><img src="@Html.Raw(Model.User.PhotoPath)" height="180" width="320" alt="a description of the image"></td>
+        </tr>
+    }
+    
+    @if (Model.User.Role == UserRole.Trainer)
+    {
+        <tr>
+            <td>Trainer informations</td>
+            <td>
+                <a class="btn btn-secondary my-1" href="@Url.Action("Info", "Trainer", new { id = Model.User.Trainer.Id })">See</a>
+            </td>
+        </tr> 
+    }
+
+    </tbody>
+</table>
+
+<a class="btn btn-secondary my-1" href="@Url.Action("Edit", new { id = Model.User.Id })">Edit</a>
+<a class="btn btn-secondary my-1" href="@Url.Action("Reservations", new { id = Model.User.Id })">Court reservations</a>

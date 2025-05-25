@@ -1,0 +1,37 @@
+@model Sprint.MVC.Models.User.UserIndexViewModel
+
+<!DOCTYPE html>
+
+<html>
+
+<h3>Users</h3>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th style="width:35%">Name</th>
+            <th style="width:45%">Role</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            @if (!user.IsDeleted)
+            {
+                <tr>
+                    <td>@user.FirstName @user.LastName</td>
+                    <td>@user.Role</td>
+                    <td>
+                        <a class="btn btn-secondary my-1" href="@Url.Action("Edit", new { Id = user.Id })">Edit</a>
+                        <a class="btn btn-secondary my-1" href="@Url.Action("Info", new { Id = user.Id })">Info</a>
+                        <a class="btn btn-danger my-1" href="@Url.Action("Delete", new { Id = user.Id })">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+
+</html>

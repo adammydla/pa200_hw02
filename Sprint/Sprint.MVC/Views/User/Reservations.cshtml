@@ -1,0 +1,46 @@
+﻿@model Sprint.MVC.Models.User.UserReservationsViewModel
+
+@* vyrobit rozne typy nahladu (podla casu, ukazat aj odstranene, ukazat iba aktualne, atd) a strankovanie*@
+<h4>Court reservations</h4>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>From</th>
+            <th>To</th>
+            <th>Court</th>
+            <th>Trainer</th>
+            <th style="width:15%">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var reservation in Model.Reservations)
+        {
+            <tr>
+                <td>@reservation.From</td>
+                <td>@reservation.To</td>
+                <td>@Model.Courts.Where(x => x.Id == reservation.CourtId).First().CourtNumber</td>
+                @if (reservation.TrainerReservation is not null)
+                {
+                    <td>
+                        @reservation.TrainerReservation.Trainer.User.FirstName @reservation.TrainerReservation.Trainer.User.LastName
+                    </td>
+
+                    <td>
+                        @if (reservation.TrainerReservation.TrainerReview is not null)
+                        {
+                            <a class="btn btn-secondary my-1" href="@Url.Action("ReviewGet", "TrainerReview", new { trainerReservationId = reservation.TrainerReservation.Id })">See Review</a>
+                        }
+                        else if (!reservation.IsDeleted && reservation.To < DateTime.Today)
+                        {
+                            <a class="btn btn-secondary my-1" href="@Url.Action("ReviewWrite", "TrainerReview", new { trainerReservationId = reservation.TrainerReservation.Id })">Write Review</a>
+                        }
+                    </td>
+                } else {
+                    <td></td>
+                    <td></td>
+                }
+
+            </tr>
+        }
+    </tbody>
+</table>

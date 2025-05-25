@@ -1,0 +1,29 @@
+@using Microsoft.AspNetCore.Identity
+@using Sprint.BL.Dto.User
+@inject SignInManager<UserDto> SignInManager
+@inject UserManager<UserDto> UserManager
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        var usrId = Guid.Parse(User.Claims.Single(x => x.Value.Length == 36).Value);
+        <li class="nav-item">
+            <a class="nav-link text-light" asp-area="" asp-controller="User" asp-action="Info" asp-route-id="@usrId">Your account</a>
+        </li>
+        <li class="nav-item">
+            @using (Html.BeginForm("Logout", "Identity", new { returnUrl = Url.Action("Index", "Home") }, FormMethod.Post))
+            {
+                <button type="submit" class="nav-link btn btn-link text-light">Logout</button>
+            }
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-light" href="@Url.Action("Register", "Identity")">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="@Url.Action("Login", "Identity")">Login</a>
+        </li>
+    }
+</ul>

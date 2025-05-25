@@ -1,0 +1,75 @@
+@using Sprint.BL.Dto.CourtReservation
+@using Sprint.MVC.Models.TrainerReservation
+@model Sprint.MVC.Models.CourtReservation.CourtReservationIndexViewModel
+
+@{
+    IEnumerable<CourtReservationDto> reservations;
+    if (User.IsInRole("Admin") || User.IsInRole("Trainer"))
+    {
+        reservations = Model.CourtReservations;
+    }
+    else
+    {
+        /// aj ja grcam z tohto riesenia ale ta co uz
+        var usrId = Guid.Parse(User.Claims.Single(x => x.Value.Length == 36).Value);
+        reservations = Model.CourtReservations.Where(x => x.UserId == usrId);
+    }
+}
+
+<h3>Court Reservations</h3>
+
+<a class="btn btn-primary my-1" href="@Url.Action("Add")">Create New Reservation</a>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Date</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Court</th>
+        <th>Trainer</th>
+        <th style="width:10%">Actions</th>
+        <th style="width:10%"></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var reservation in reservations.OrderByDescending(x => x.From))
+    {
+        <tr>
+            <td>@reservation.From.ToString("ddd, dd MMMM yyyy")</td>
+            <td>@reservation.From.ToString("HH:mm")</td>
+            <td>@reservation.To.ToString("HH:mm")</td>
+            <td>@Model.Courts.First(x => x.Id == reservation.CourtId).CourtNumber</td>
+            @if (reservation.TrainerReservation != null)
+            {
+                <td>@reservation.TrainerReservation.Trainer.User.FirstName @reservation.TrainerReservation.Trainer.User.LastName</td>
+            }
+            else
+            {
+                <td></td>
+            }
+            
+            <td>
+            @if (reservation.TrainerReservation == null)
+            {
+                @using (Html.BeginForm("ChooseTrainer", "TrainerReservation",
+                    new TrainerReservationCreateModel {CourtResId = reservation.Id, TimeFrom = reservation.From, TimeTo = reservation.To},
+                    FormMethod.Post, true, new { @class = "form-inline" }))
+                {
+                    <input class="btn btn-info my-1" type="submit" value="Add Trainer"/>
+                }
+            }
+            </td>
+            <td>
+            @if (reservation.From > DateTime.Today.AddDays(1) || User.IsInRole("Admin"))
+            {
+                @using (Html.BeginForm("Delete", "CourtReservation", new { id = reservation.Id }, FormMethod.Post, true, new { @class = "form-inline" }))
+                {
+                    <input class="btn btn-danger my-1" type="submit" value="Delete"/>
+                }
+            }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
